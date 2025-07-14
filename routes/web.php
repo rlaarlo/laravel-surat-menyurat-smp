@@ -61,4 +61,30 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('status', \App\Http\Controllers\LetterStatusController::class)->except(['show', 'create', 'edit']);
     });
 
+    // OneDrive Management Routes
+    Route::prefix('onedrive')->as('onedrive.')->group(function () {
+        // OneDrive file management (requires connection)
+        Route::middleware(['onedrive.connected'])->group(function () {
+            Route::get('/', [\App\Http\Controllers\OneDriveController::class, 'index'])->name('index');
+            Route::get('/files', [\App\Http\Controllers\OneDriveController::class, 'listFiles'])->name('files');
+            Route::post('/upload', [\App\Http\Controllers\OneDriveController::class, 'upload'])->name('upload');
+            Route::delete('/file', [\App\Http\Controllers\OneDriveController::class, 'deleteFile'])->name('delete');
+            Route::post('/folder', [\App\Http\Controllers\OneDriveController::class, 'createFolder'])->name('folder.create');
+            Route::get('/sync', [\App\Http\Controllers\OneDriveController::class, 'sync'])->name('sync');
+            Route::get('/stats', [\App\Http\Controllers\OneDriveController::class, 'storageStats'])->name('stats');
+        });
+        
+        // OneDrive authentication (admin only)
+        Route::middleware(['role:admin'])->group(function () {
+            Route::get('/auth', [\App\Http\Controllers\OneDriveAuthController::class, 'authenticate'])->name('auth');
+            Route::post('/disconnect', [\App\Http\Controllers\OneDriveAuthController::class, 'disconnect'])->name('disconnect');
+            Route::get('/status', [\App\Http\Controllers\OneDriveAuthController::class, 'status'])->name('status');
+            Route::post('/refresh', [\App\Http\Controllers\OneDriveAuthController::class, 'refreshToken'])->name('refresh');
+        });
+    });
+
 });
+
+// OneDrive OAuth callback (outside auth middleware for Microsoft to access)
+Route::get('/auth/onedrive/callback', [\App\Http\Controllers\OneDriveAuthController::class, 'callback'])
+    ->name('onedrive.auth.callback');

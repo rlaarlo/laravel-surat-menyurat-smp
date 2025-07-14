@@ -9,6 +9,7 @@ use App\Models\Attachment;
 use App\Models\Classification;
 use App\Models\Config;
 use App\Models\Letter;
+use App\Services\OneDriveService;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -18,6 +19,12 @@ use Illuminate\Support\Facades\Storage;
 
 class IncomingLetterController extends Controller
 {
+    protected $oneDriveService;
+
+    public function __construct(OneDriveService $oneDriveService)
+    {
+        $this->oneDriveService = $oneDriveService;
+    }
     /**
      * Display a listing of the resource.
      *
@@ -101,17 +108,26 @@ class IncomingLetterController extends Controller
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
                     if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
-                    $filename = time() . '-'. $attachment->getClientOriginalName();
-                    $filename = str_replace(' ', '-', $filename);
-                    $path = 'attachments/' . $filename;
-                    Storage::disk('onedrive')->put($path, file_get_contents($attachment));
-                    Attachment::create([
-                        'filename' => $filename,
-                        'path' => $path,
-                        'extension' => $extension,
-                        'user_id' => $user->id,
-                        'letter_id' => $letter->id,
-                    ]);
+                    
+                    // Use OneDriveService for better error handling and validation
+                    $uploadResult = $this->oneDriveService->uploadFile(
+                        $attachment, 
+                        null, 
+                        'attachments/incoming'
+                    );
+                    
+                    if ($uploadResult['success']) {
+                        Attachment::create([
+                            'filename' => $uploadResult['filename'],
+                            'path' => $uploadResult['path'],
+                            'extension' => $extension,
+                            'user_id' => $user->id,
+                            'letter_id' => $letter->id,
+                        ]);
+                    } else {
+                        // Log error but continue processing other files
+                        \Log::warning("Failed to upload attachment: " . $uploadResult['error']);
+                    }
                 }
             }
             return redirect()
@@ -164,17 +180,26 @@ class IncomingLetterController extends Controller
                 foreach ($request->attachments as $attachment) {
                     $extension = $attachment->getClientOriginalExtension();
                     if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
-                    $filename = time() . '-'. $attachment->getClientOriginalName();
-                    $filename = str_replace(' ', '-', $filename);
-                    $path = 'attachments/' . $filename;
-                    Storage::disk('onedrive')->put($path, file_get_contents($attachment));
-                    Attachment::create([
-                        'filename' => $filename,
-                        'path' => $path,
-                        'extension' => $extension,
-                        'user_id' => auth()->user()->id,
-                        'letter_id' => $incoming->id,
-                    ]);
+                    
+                    // Use OneDriveService for better error handling and validation
+                    $uploadResult = $this->oneDriveService->uploadFile(
+                        $attachment, 
+                        null, 
+                        'attachments/incoming'
+                    );
+                    
+                    if ($uploadResult['success']) {
+                        Attachment::create([
+                            'filename' => $uploadResult['filename'],
+                            'path' => $uploadResult['path'],
+                            'extension' => $extension,
+                            'user_id' => auth()->user()->id,
+                            'letter_id' => $incoming->id,
+                        ]);
+                    } else {
+                        // Log error but continue processing other files
+                        \Log::warning("Failed to upload attachment: " . $uploadResult['error']);
+                    }
                 }
             }
             return back()->with('success', __('menu.general.success'));
@@ -192,6 +217,13 @@ class IncomingLetterController extends Controller
     public function destroy(Letter $incoming): RedirectResponse
     {
         try {
+            // Delete associated attachments from OneDrive
+            foreach ($incoming->attachments as $attachment) {
+                if ($attachment->path) {
+                    $this->oneDriveService->deleteFile($attachment->path);
+                }
+            }
+            
             $incoming->delete();
             return redirect()
                 ->route('transaction.incoming.index')

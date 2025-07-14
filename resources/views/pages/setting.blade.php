@@ -17,6 +17,8 @@
                 </li>
             </ul>
 
+    <div class="row">
+        <div class="col-md-8">
             <div class="card mb-4">
                 <div class="card-body">
                     <form action="{{ route('settings.update') }}" method="post">
@@ -37,6 +39,13 @@
                     </form>
                 </div>
             </div>
+        </div>
+        <div class="col-md-4">
+            @php
+                $oneDriveService = app(\App\Services\OneDriveService::class);
+                $oneDriveStatus = $oneDriveService->getConnectionStatus();
+            @endphp
+            <x-onedrive-status :status="$oneDriveStatus" />
         </div>
     </div>
 @endsection
