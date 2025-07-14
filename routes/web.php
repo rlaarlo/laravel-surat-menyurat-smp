@@ -63,14 +63,16 @@ Route::middleware(['auth'])->group(function () {
 
     // OneDrive Management Routes
     Route::prefix('onedrive')->as('onedrive.')->group(function () {
-        // OneDrive file management
-        Route::get('/', [\App\Http\Controllers\OneDriveController::class, 'index'])->name('index');
-        Route::get('/files', [\App\Http\Controllers\OneDriveController::class, 'listFiles'])->name('files');
-        Route::post('/upload', [\App\Http\Controllers\OneDriveController::class, 'upload'])->name('upload');
-        Route::delete('/file', [\App\Http\Controllers\OneDriveController::class, 'deleteFile'])->name('delete');
-        Route::post('/folder', [\App\Http\Controllers\OneDriveController::class, 'createFolder'])->name('folder.create');
-        Route::get('/sync', [\App\Http\Controllers\OneDriveController::class, 'sync'])->name('sync');
-        Route::get('/stats', [\App\Http\Controllers\OneDriveController::class, 'storageStats'])->name('stats');
+        // OneDrive file management (requires connection)
+        Route::middleware(['onedrive.connected'])->group(function () {
+            Route::get('/', [\App\Http\Controllers\OneDriveController::class, 'index'])->name('index');
+            Route::get('/files', [\App\Http\Controllers\OneDriveController::class, 'listFiles'])->name('files');
+            Route::post('/upload', [\App\Http\Controllers\OneDriveController::class, 'upload'])->name('upload');
+            Route::delete('/file', [\App\Http\Controllers\OneDriveController::class, 'deleteFile'])->name('delete');
+            Route::post('/folder', [\App\Http\Controllers\OneDriveController::class, 'createFolder'])->name('folder.create');
+            Route::get('/sync', [\App\Http\Controllers\OneDriveController::class, 'sync'])->name('sync');
+            Route::get('/stats', [\App\Http\Controllers\OneDriveController::class, 'storageStats'])->name('stats');
+        });
         
         // OneDrive authentication (admin only)
         Route::middleware(['role:admin'])->group(function () {
