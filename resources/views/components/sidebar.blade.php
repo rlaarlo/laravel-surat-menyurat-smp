@@ -88,6 +88,15 @@
                 </li>
             </ul>
         </li>
+        
+        <!-- OneDrive -->
+        <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('onedrive.*') ? 'active' : '' }}">
+            <a href="{{ route('onedrive.index') }}" class="menu-link">
+                <i class="menu-icon tf-icons bx bxl-microsoft"></i>
+                <div data-i18n="OneDrive">OneDrive</div>
+            </a>
+        </li>
+        
         @if(auth()->user()->role == 'admin')
             <li class="menu-item {{ \Illuminate\Support\Facades\Route::is('reference.*') ? 'active open' : '' }}">
                 <a href="javascript:void(0);" class="menu-link menu-toggle">
