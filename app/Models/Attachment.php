@@ -7,6 +7,7 @@ use App\Enums\LetterType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class Attachment extends Model
 {
@@ -29,9 +30,16 @@ class Attachment extends Model
      */
     public function getPathUrlAttribute(): string {
         if (!is_null($this->path)) {
-            return $this->path;
+            // For OneDrive files, generate a proper OneDrive URL
+            try {
+                return Storage::disk('onedrive')->url($this->path);
+            } catch (\Exception $e) {
+                // Fallback to the path if URL generation fails
+                return $this->path;
+            }
         }
 
+        // Fallback to local storage for backward compatibility
         return asset('storage/attachments/' . $this->filename);
     }
 

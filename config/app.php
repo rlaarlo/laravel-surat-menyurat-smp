@@ -186,6 +186,7 @@ return [
          * Package Service Providers...
          */
         App\Providers\FortifyServiceProvider::class,
+        Justus\FlysystemOneDrive\Providers\OneDriveAdapterServiceProvider::class,
 
         /*
          * Application Service Providers...
