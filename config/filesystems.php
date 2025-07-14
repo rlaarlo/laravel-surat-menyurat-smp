@@ -44,6 +44,13 @@ return [
             'throw' => false,
         ],
 
+        'onedrive' => [
+            'driver' => 'onedrive',
+            'root' => env('ONEDRIVE_ROOT', 'me'),
+            'access_token' => env('ONEDRIVE_ACCESS_TOKEN'),
+            'directory_type' => env('ONEDRIVE_DIR_TYPE', 'drives'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2931fb0f1628e8cec2b065218a85959d",
+    "content-hash": "45721756ee02a0807080939204d6d184",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1154,6 +1154,60 @@
             "time": "2025-02-03T10:55:03+00:00"
         },
         {
+            "name": "justus/flysystem-onedrive",
+            "version": "v2.0.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/doerffler/flysystem-onedrive.git",
+                "reference": "b973ceec389e32344edab7da7eb025445d3390a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/doerffler/flysystem-onedrive/zipball/b973ceec389e32344edab7da7eb025445d3390a1",
+                "reference": "b973ceec389e32344edab7da7eb025445d3390a1",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "^9.0|^10.0|^11.0",
+                "league/flysystem": "^3.2",
+                "microsoft/microsoft-graph": "^1.74",
+                "php": "^8.0.2"
+            },
+            "require-dev": {
+                "laravel/framework": "^9.19",
+                "orchestra/testbench": "^v7.1.0",
+                "phpunit/phpunit": "^9.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Justus\\FlysystemOneDrive\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Justus Donner",
+                    "email": "jdonner@doerffler.com"
+                }
+            ],
+            "description": "A flysystem driver for OneDrive that uses the Microsoft Graph API",
+            "keywords": [
+                "Flysystem",
+                "OneDrive",
+                "api",
+                "flysystem-onedrive"
+            ],
+            "support": {
+                "issues": "https://github.com/doerffler/flysystem-onedrive/issues",
+                "source": "https://github.com/doerffler/flysystem-onedrive/tree/v2.0.6"
+            },
+            "time": "2024-06-06T09:04:55+00:00"
+        },
+        {
             "name": "laravel/fortify",
             "version": "v1.19.1",
             "source": {
@@ -1984,6 +2038,58 @@
                 }
             ],
             "time": "2024-09-21T08:32:55+00:00"
+        },
+        {
+            "name": "microsoft/microsoft-graph",
+            "version": "1.110.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/microsoftgraph/msgraph-sdk-php.git",
+                "reference": "da45ea4a5d5dda97549313129748bd10fdb2930c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/microsoftgraph/msgraph-sdk-php/zipball/da45ea4a5d5dda97549313129748bd10fdb2930c",
+                "reference": "da45ea4a5d5dda97549313129748bd10fdb2930c",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "guzzlehttp/guzzle": "^6.5.8 || ^7.4.5",
+                "php": "^8.0 || ^7.3",
+                "psr/http-message": "^1.0 || ^2.0"
+            },
+            "require-dev": {
+                "guzzlehttp/promises": "^1.0 || ^2.0",
+                "mikey179/vfsstream": "^1.2",
+                "phpstan/phpstan": "^0.12.90 || ^1.0.0",
+                "phpunit/phpunit": "^8.0 || ^9.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Microsoft\\Graph\\": "src/",
+                    "Beta\\Microsoft\\Graph\\": "src/Beta/Microsoft/Graph/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Microsoft Graph Client Tooling",
+                    "email": "graphtooling@service.microsoft.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "The Microsoft Graph SDK for PHP",
+            "homepage": "https://developer.microsoft.com/en-us/graph",
+            "support": {
+                "issues": "https://github.com/microsoftgraph/msgraph-sdk-php/issues",
+                "source": "https://github.com/microsoftgraph/msgraph-sdk-php/tree/1.110.0"
+            },
+            "time": "2024-01-15T18:49:30+00:00"
         },
         {
             "name": "monolog/monolog",

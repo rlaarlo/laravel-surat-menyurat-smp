@@ -13,6 +13,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Storage;
 
 class OutgoingLetterController extends Controller
 {
@@ -101,9 +102,11 @@ class OutgoingLetterController extends Controller
                     if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
-                    $attachment->storeAs('public/attachments', $filename);
+                    $path = 'attachments/' . $filename;
+                    Storage::disk('onedrive')->put($path, file_get_contents($attachment));
                     Attachment::create([
                         'filename' => $filename,
+                        'path' => $path,
                         'extension' => $extension,
                         'user_id' => $user->id,
                         'letter_id' => $letter->id,
@@ -162,9 +165,11 @@ class OutgoingLetterController extends Controller
                     if (!in_array($extension, ['png', 'jpg', 'jpeg', 'pdf'])) continue;
                     $filename = time() . '-'. $attachment->getClientOriginalName();
                     $filename = str_replace(' ', '-', $filename);
-                    $attachment->storeAs('public/attachments', $filename);
+                    $path = 'attachments/' . $filename;
+                    Storage::disk('onedrive')->put($path, file_get_contents($attachment));
                     Attachment::create([
                         'filename' => $filename,
+                        'path' => $path,
                         'extension' => $extension,
                         'user_id' => auth()->user()->id,
                         'letter_id' => $outgoing->id,
